@@ -1,18 +1,19 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner, searchFor } from '../utils/helpers';
+import { HomePage } from '../pages/HomePage';
+import { SearchResultsPage } from '../pages/SearchResultsPage';
 import { searchTerms } from '../config/test-data';
 
 test('search returns relevant results for a known brand', async ({ page }) => {
-  await page.goto('/');
-  await dismissCookieBanner(page);
-  await searchFor(page, searchTerms.searchResults);
+  const homePage = new HomePage(page);
+  const searchResults = new SearchResultsPage(page);
 
-  const productCards = page.locator('article[data-product-id]');
-  await productCards.first().waitFor({ state: 'visible' });
+  await homePage.goto();
+  await homePage.search(searchTerms.searchResults);
+  await searchResults.waitForResults();
 
-  const count = await productCards.count();
+  const count = await searchResults.getProductCount();
   expect(count).toBeGreaterThan(0);
 
-  const firstTitle = await productCards.first().locator('h3 a').textContent();
-  expect(firstTitle?.toLowerCase()).toContain(searchTerms.searchResults.toLowerCase());
+  const firstTitle = await searchResults.getProductTitle(0);
+  expect(firstTitle.toLowerCase()).toContain(searchTerms.searchResults.toLowerCase());
 });

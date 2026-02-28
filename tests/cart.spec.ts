@@ -1,18 +1,19 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner, searchFor } from '../utils/helpers';
+import { HomePage } from '../pages/HomePage';
+import { SearchResultsPage } from '../pages/SearchResultsPage';
+import { CartModal } from '../pages/CartModal';
 import { searchTerms } from '../config/test-data';
 
 test('adding a product to cart updates the cart count', async ({ page }) => {
-  await page.goto('/');
-  await dismissCookieBanner(page);
-  await searchFor(page, searchTerms.cart);
+  const homePage = new HomePage(page);
+  const searchResults = new SearchResultsPage(page);
+  const cartModal = new CartModal(page);
 
-  const productCards = page.locator('article[data-product-id]');
-  await productCards.first().waitFor({ state: 'visible' });
-  await dismissCookieBanner(page);
+  await homePage.goto();
+  await homePage.search(searchTerms.cart);
+  await searchResults.waitForResults();
+  await searchResults.addToCart(0);
 
-  await productCards.first().locator('button[data-id]').click();
-
-  await expect(page.locator('#cart-modal-title')).toBeVisible();
-  await expect(page.locator('#header-cart-button [data-qty]')).toBeVisible();
+  await expect(cartModal.modalTitle).toBeVisible();
+  await expect(cartModal.cartBadge).toBeVisible();
 });

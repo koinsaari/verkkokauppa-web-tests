@@ -1,22 +1,19 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner, searchFor } from '../utils/helpers';
+import { HomePage } from '../pages/HomePage';
+import { SearchResultsPage } from '../pages/SearchResultsPage';
+import { ProductPage } from '../pages/ProductPage';
 import { searchTerms, expectedValues } from '../config/test-data';
 
 test('search Nikon, sort by highest price, and verify second product', async ({ page }) => {
-  await page.goto('/');
-  await dismissCookieBanner(page);
+  const homePage = new HomePage(page);
+  const searchResults = new SearchResultsPage(page);
+  const productPage = new ProductPage(page);
 
-  await searchFor(page, searchTerms.nikonSearch);
+  await homePage.goto();
+  await homePage.search(searchTerms.nikonSearch);
 
-  const sortDropdown = page.locator('#sort_select');
-  await sortDropdown.waitFor({ state: 'visible' });
-  await sortDropdown.selectOption(expectedValues.sortByPriceDesc);
+  await searchResults.sortBy(expectedValues.sortByPriceDesc);
+  await searchResults.clickProduct(1);
 
-  const productCards = page.locator('article[data-product-id]');
-  await productCards.nth(1).waitFor({ state: 'visible' });
-  await dismissCookieBanner(page);
-
-  await productCards.nth(1).locator('h3 a').click();
-
-  await expect(page.locator('h1')).toContainText(expectedValues.nikonProductTitle);
+  await expect(productPage.title).toContainText(expectedValues.nikonProductTitle);
 });

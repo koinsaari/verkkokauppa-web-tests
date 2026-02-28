@@ -1,18 +1,20 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner, searchFor } from '../utils/helpers';
+import { HomePage } from '../pages/HomePage';
+import { SearchResultsPage } from '../pages/SearchResultsPage';
+import { ProductPage } from '../pages/ProductPage';
 import { searchTerms } from '../config/test-data';
 
 test('product page displays title, price and add to cart option', async ({ page }) => {
-  await page.goto('/');
-  await dismissCookieBanner(page);
-  await searchFor(page, searchTerms.productPage);
+  const homePage = new HomePage(page);
+  const searchResults = new SearchResultsPage(page);
+  const productPage = new ProductPage(page);
 
-  const productCards = page.locator('article[data-product-id]');
-  await productCards.first().waitFor({ state: 'visible' });
-  await dismissCookieBanner(page);
-  await productCards.first().locator('h3 a').click();
+  await homePage.goto();
+  await homePage.search(searchTerms.productPage);
+  await searchResults.waitForResults();
+  await searchResults.clickProduct(0);
 
-  await expect(page.locator('h1')).toBeVisible();
-  await expect(page.locator('data[data-price="current"]').first()).toBeVisible();
-  await expect(page.locator('button[data-id]').first()).toBeVisible();
+  await expect(productPage.title).toBeVisible();
+  await expect(productPage.price).toBeVisible();
+  await expect(productPage.addToCartButton).toBeVisible();
 });
