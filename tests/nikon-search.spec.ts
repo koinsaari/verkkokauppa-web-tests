@@ -1,14 +1,11 @@
-import { test, expect, Page } from '@playwright/test';
-
-const dismissCookieBanner = (page: Page) =>
-  page.evaluate(() => document.querySelector('#usercentrics-cmp-ui')?.remove());
+import { test, expect } from '@playwright/test';
+import { dismissCookieBanner, searchFor } from '../utils/helpers';
 
 test('search Nikon, sort by highest price, and verify second product', async ({ page }) => {
   await page.goto('/');
   await dismissCookieBanner(page);
 
-  await page.locator('#combobox_input').fill('Nikon');
-  await page.locator('button[aria-label="Etsi"]').click();
+  await searchFor(page, 'Nikon');
 
   const sortDropdown = page.locator('#sort_select');
   await sortDropdown.waitFor({ state: 'visible' });
