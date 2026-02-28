@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { dismissCookieBanner, searchFor } from '../utils/helpers';
+import { searchTerms } from '../config/test-data';
 
 test('product page displays title, price and add to cart option', async ({ page }) => {
   await page.goto('/');
   await dismissCookieBanner(page);
-  await searchFor(page, 'iPhone');
+  await searchFor(page, searchTerms.productPage);
 
   const productCards = page.locator('article[data-product-id]');
   await productCards.first().waitFor({ state: 'visible' });
