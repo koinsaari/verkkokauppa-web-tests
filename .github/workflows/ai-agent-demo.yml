@@ -28,7 +28,7 @@ jobs:
       run: ollama pull llama3.2:3b
 
     - name: Run demo test
-      run: npx playwright test tests/demo.spec.ts
+      run: npx playwright test --config=playwright.demo.config.ts
       continue-on-error: true
 
     - name: Analyze failures with AI

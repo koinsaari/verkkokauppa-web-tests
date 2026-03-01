@@ -1,10 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: './agents',
   fullyParallel: false,
-  forbidOnly: !!process.env.CI,
-  retries: 2,
+  retries: 0,
   workers: 1,
   timeout: 60_000,
   reporter: [['html'], ['json', { outputFile: 'test-results/results.json' }]],

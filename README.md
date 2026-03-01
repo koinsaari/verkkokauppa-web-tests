@@ -75,7 +75,7 @@ term to one that returns no results.
 ## Project structure
 
 ```
-agents/          AI agent scripts
+agents/          AI agent scripts and demo test
 pages/           Page objects (BasePage, HomePage, SearchResultsPage, ProductPage, CartModal, CartPage)
 tests/           Test specs
 config/          Search terms and expected values
