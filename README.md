@@ -44,4 +44,4 @@ tests/           Test specs
 config/          Search terms and expected values
 ```
 
-Tests run sequentially (`workers: 1`) with retries to handle live site rate limiting.
+Tests run Chromium only because cookie consent overlay caused flaky clicks on WebKit/Firefox. Tests run sequentially with retries to avoid rate limiting the live site.

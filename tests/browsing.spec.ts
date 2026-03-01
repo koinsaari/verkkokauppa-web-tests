@@ -8,13 +8,10 @@ test('navigating a category shows products', async ({ page }) => {
   const searchResults = new SearchResultsPage(page);
 
   await homePage.goto();
-  await homePage.dismissCookieBanner();
   await page.locator(`a[href="${expectedValues.categoryPath}"]`).first().click();
 
   await expect(page.locator('h1')).toBeVisible();
-  await page.evaluate(() =>
-    document.querySelector('#usercentrics-cmp-ui')?.remove()
-  );
+  await homePage.dismissCookieBanner();
   await page.locator('a[href*="/products"]').first().click();
 
   await searchResults.waitForResults();
