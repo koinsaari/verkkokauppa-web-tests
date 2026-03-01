@@ -1,0 +1,35 @@
+name: AI Agent Demo
+on:
+  workflow_dispatch:
+jobs:
+  demo:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+
+    - name: Install Ollama
+      run: curl -fsSL https://ollama.com/install.sh | sh
+    - name: Restore Ollama model cache
+      id: ollama-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.ollama
+        key: ollama-llama3.2-3b
+    - name: Pull model
+      if: steps.ollama-cache.outputs.cache-hit != 'true'
+      run: ollama pull llama3.2:3b
+
+    - name: Run demo test
+      run: npx playwright test tests/demo.spec.ts
+      continue-on-error: true
+
+    - name: Analyze failures with AI
+      run: node agents/failure-summary.mjs
