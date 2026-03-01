@@ -6,6 +6,6 @@ export const searchTerms = {
 };
 
 export const expectedValues = {
-  nikonProductTitle: 'Nikon Z30',
+  nikonProductTitle: 'Nikon NIKKOR Z 400mm',
   sortByPriceDesc: 'price:desc',
 };

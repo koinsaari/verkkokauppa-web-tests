@@ -11,6 +11,7 @@ test('search Nikon, sort by highest price, and verify second product', async ({ 
 
   await homePage.goto();
   await homePage.search(searchTerms.nikonSearch);
+  await searchResults.waitForResults();
 
   await searchResults.sortBy(expectedValues.sortByPriceDesc);
   await searchResults.clickProduct(1);
